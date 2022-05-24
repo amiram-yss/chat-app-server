@@ -16,59 +16,60 @@ namespace chat_app_server.Service
 {
     public class SqlServerLocalDatasetRatingService : IRatingService
     {
-        private static DateTime? _tmpDate = null;
-
-        private readonly chat_app_serverContext _context;
-
+        chat_app_serverContext _context;
+        //OK
         public SqlServerLocalDatasetRatingService(chat_app_serverContext context)
         {
-            _context = context;
+            this._context = context;
         }
-
-        public void Create(string Name, int Grade, string comment, DateTime Date)
+        public void Create(Rating rating)
         {
             throw new NotImplementedException();
         }
 
-        public bool Edit(string id, Rating editedRating)
+        public Task CreateAsync(Rating rating)
         {
-            if (id != editedRating.Name)
-            {
-                return false;
-            }
-            try
-            {
-                var ratToUpdate = Get(id);
-                ratToUpdate.Grade = editedRating.Grade;
-                ratToUpdate.Comment = editedRating.Comment;
-                _context.Update(ratToUpdate);
-                _context.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            throw new NotImplementedException();
+        }
+
+        public void Delete(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Edit(string id, Rating rating)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EditAsync(string id, Rating rating)
+        {
+            throw new NotImplementedException();
         }
 
         public Rating Get(string id)
         {
-            try
-            {
-                return _context.Rating.Single(rec => rec.Name == id);
-            }
-            catch
-            {
-                return null;
-            }
-
+            throw new NotImplementedException();
+        }
+        //OK
+        public ICollection<Rating> GetAll()
+        {
+            return _context.Rating.ToList<Rating>();
+        }
+        //OK
+        public async Task<IEnumerable<Rating>> GetAllAsync()
+        {
+            return await _context.Rating.ToListAsync<Rating>();
         }
 
-        public List<Rating> GetAll()
+        public Task<Rating> GetAsync(string id)
         {
-            if (_tmpDate == null || _context == null || _context.Rating == null)
-                return new List<Rating>();
-            return _context.Rating.ToList();
+            throw new NotImplementedException();
         }
 
         public double GetAverge()
@@ -76,45 +77,9 @@ namespace chat_app_server.Service
             throw new NotImplementedException();
         }
 
-        ICollection<Rating> IRatingService.GetAll()
+        public bool AllSetup()
         {
-            if (_tmpDate == null)
-                return null;
-            return _context.Rating.ToList();
-        }
-
-        public Rating GetRatingByName(string Name)
-        {
-            if (_context == null || _context.Rating == null)
-                return null;
-            try
-            {
-                var result = _context.Rating.Single(r => r.Name == Name);
-                return result;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public async Task<IEnumerable<Rating>> GetAllAsync()
-        {
-            if (_context.Rating == null)
-                return null;
-            return await _context.Rating.ToListAsync();
-        }
-
-        public async Task<Rating> GetAsync(string id)
-        {
-            if (id == null || _context == null || _context.Rating == null)
-                return null;
-            return await _context.Rating.FirstOrDefaultAsync(m => m.Name == id);
-        }
-
-        public void Delete(string id)
-        {
-            throw new NotImplementedException();
+            return (_context != null) && (_context.Rating != null);
         }
     }
 }

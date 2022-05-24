@@ -7,12 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using chat_app_server.Data;
 using chat_app_server.Models;
+using chat_app_server.Service;
 
 namespace chat_app_server.Controllers
 {
     public class RatingsController : Controller
     {
         private readonly chat_app_serverContext _context;
+        private IRatingService _service;
+        public RatingsController(chat_app_serverContext context)
+        {
+            _context = context;
+            _service = new SqlServerLocalDatasetRatingService(_context);
+        }
 
         private double Avg
         {
@@ -48,18 +55,13 @@ namespace chat_app_server.Controllers
             }
         }
 
-        public RatingsController(chat_app_serverContext context)
-        {
-            _context = context;
-        }
-
         // GET: Ratings
         public async Task<IActionResult> Index()
         {
             ViewData["avg"] = Avg;
-            return _context.Rating != null ?
-                          View(await _context.Rating.ToListAsync()) :
-                          Problem("Entity set 'chat_app_serverContext.Rating'  is null.");
+            if(!_service.AllSetup())
+                Problem("Entity set 'chat_app_serverContext.Rating'  is null.");
+            return View(await _service.GetAllAsync());
         }
 
         // GET: Ratings/Details/5
@@ -91,7 +93,7 @@ namespace chat_app_server.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Grade,Comment")] Rating rating)
+        public async Task<IActionResult> Create([Bind("Name,Grade,Comment,Date")] Rating rating)
         {
             rating.Date = DateTime.Now;
             if (ModelState.IsValid)
