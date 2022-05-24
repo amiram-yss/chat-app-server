@@ -13,7 +13,7 @@ namespace chat_app_server.Controllers
     public class RatingsController : Controller
     {
         private readonly chat_app_serverContext _context;
-        [ViewData]
+
         private double Avg
         {
             get
@@ -27,14 +27,14 @@ namespace chat_app_server.Controllers
                 }
                 if (Counter == 0)
                     return 0;
-                double avg = (Total / Counter);
+                double avg = (double)Counter / Total;
                 return avg;
             }
         }
         private static DateTime? _tmpDate = null;
 
         public bool IsNameAvailable([Bind("Name,Grade,Comment")] Rating rating)
-        { 
+        {
             if (_context.Rating == null)
                 return true;
             try
@@ -56,7 +56,8 @@ namespace chat_app_server.Controllers
         // GET: Ratings
         public async Task<IActionResult> Index()
         {
-              return _context.Rating != null ? 
+            ViewData["avg"] = Avg;
+            return _context.Rating != null ?
                           View(await _context.Rating.ToListAsync()) :
                           Problem("Entity set 'chat_app_serverContext.Rating'  is null.");
         }
@@ -191,14 +192,14 @@ namespace chat_app_server.Controllers
             {
                 _context.Rating.Remove(rating);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool RatingExists(string id)
         {
-          return (_context.Rating?.Any(e => e.Name == id)).GetValueOrDefault();
+            return (_context.Rating?.Any(e => e.Name == id)).GetValueOrDefault();
         }
     }
 }
