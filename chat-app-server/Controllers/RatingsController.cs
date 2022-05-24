@@ -13,6 +13,40 @@ namespace chat_app_server.Controllers
     public class RatingsController : Controller
     {
         private readonly chat_app_serverContext _context;
+        [ViewData]
+        private double Avg
+        {
+            get
+            {
+                int Total = 0;
+                int Counter = 0;
+                foreach (var i in _context.Rating)
+                {
+                    Total++;
+                    Counter += i.Grade;
+                }
+                if (Counter == 0)
+                    return 0;
+                double avg = (Total / Counter);
+                return avg;
+            }
+        }
+        private static DateTime? _tmpDate = null;
+
+        public bool IsNameAvailable([Bind("Name,Grade,Comment")] Rating rating)
+        { 
+            if (_context.Rating == null)
+                return true;
+            try
+            {
+                var result = _context.Rating.Single(r => r.Name == rating.Name);
+                return false;
+            }
+            catch
+            {
+                return true;
+            }
+        }
 
         public RatingsController(chat_app_serverContext context)
         {
@@ -56,8 +90,9 @@ namespace chat_app_server.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Grade,Comment,Date")] Rating rating)
+        public async Task<IActionResult> Create([Bind("Name,Grade,Comment")] Rating rating)
         {
+            rating.Date = DateTime.Now;
             if (ModelState.IsValid)
             {
                 _context.Add(rating);
@@ -80,6 +115,7 @@ namespace chat_app_server.Controllers
             {
                 return NotFound();
             }
+            _tmpDate = rating.Date;
             return View(rating);
         }
 
@@ -88,7 +124,7 @@ namespace chat_app_server.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Name,Grade,Comment,Date")] Rating rating)
+        public async Task<IActionResult> Edit(string id, [Bind("Name,Grade,Comment")] Rating rating)
         {
             if (id != rating.Name)
             {
@@ -99,6 +135,11 @@ namespace chat_app_server.Controllers
             {
                 try
                 {
+                    if (_tmpDate != null)
+                    {
+                        rating.Date = _tmpDate ?? default(DateTime);
+                        _tmpDate = null;
+                    }
                     _context.Update(rating);
                     await _context.SaveChangesAsync();
                 }
