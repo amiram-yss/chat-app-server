@@ -69,6 +69,37 @@ namespace chat_app_server.Controllers
             return View(await _service.GetAllAsync());
         }
 
+        public async Task<IActionResult> Search()
+        {
+            ViewData["avg"] = Avg;
+            if (!_service.AllSetup())
+                Problem("Entity set 'chat_app_serverContext.Rating'  is null.");
+            return View(await _service.GetAllAsync());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Search(string query)
+        {
+            ViewData["avg"] = Avg;
+            var filter = await _service.QueryAsync(query);
+            if (filter == null)
+                Problem("Entity set 'chat_app_serverContext.Rating'  is null.");
+            return View(filter);
+        }
+
+        public async Task<IActionResult> SearchPartialView(string query)
+        {
+            if (query == null)
+                query = "";
+            ViewData["avg"] = Avg;
+            var filter = await _service.QueryAsync(query);
+            if (filter == null)
+                filter = new List<Rating>();
+          /*  if (filter == null)
+                Problem("Entity set 'chat_app_serverContext.Rating'  is null.");*/
+            return PartialView(filter);
+        }
+
         //OK!
         // GET: Ratings/Details/5
         public async Task<IActionResult> Details(string id)
