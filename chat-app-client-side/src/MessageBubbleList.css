@@ -1,0 +1,6 @@
+.bubble-row {
+    display: flex;
+    flex-direction: row-reverse;
+    overflow: hidden;
+    background-color: rebeccapurple;
+}

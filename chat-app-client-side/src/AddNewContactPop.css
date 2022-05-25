@@ -1,0 +1,23 @@
+.modal {
+    background: rgba(000, 000, 000, 0.8);
+    min-height: 1000000px;
+}
+
+.modal-backdrop {
+    display: none;
+    z-index: 1040 !important;
+}
+
+.circ {
+    border-radius: 50%;
+}
+.txtbox{
+    width: 90%;
+    align-items: center;
+    margin-left: 5%;
+    margin-top:0px;
+    margin-bottom:30px;
+}
+.msg {
+    padding-left: 6%;
+}
