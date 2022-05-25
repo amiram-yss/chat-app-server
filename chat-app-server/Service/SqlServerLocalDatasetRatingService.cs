@@ -10,65 +10,97 @@ using chat_app_server.Data;
 
 #pragma warning disable CS8603 // Possible null reference return.
 #pragma warning disable CS8604 // Possible null reference return.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 #pragma warning disable IDE0044 // Add readonly modifier
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
 
 namespace chat_app_server.Service
 {
     public class SqlServerLocalDatasetRatingService : IRatingService
     {
-        private static DateTime? _tmpDate = null;
-
-        private readonly chat_app_serverContext _context;
-
+        chat_app_serverContext _context;
+        //OK
         public SqlServerLocalDatasetRatingService(chat_app_serverContext context)
         {
-            _context = context;
+            this._context = context;
+        }
+        public void Create(Rating rating)
+        {
+            rating.Date = DateTime.Now;
+            _context.Add(rating);
+            _context.SaveChanges();
         }
 
-        public void Create(string Name, int Grade, string comment, DateTime Date)
+        public async Task CreateAsync(Rating rating)
+        {
+            rating.Date = DateTime.Now;
+            _context.Add(rating);
+            await _context.SaveChangesAsync();
+        }
+
+        public void Delete(string id)
         {
             throw new NotImplementedException();
         }
 
-        public bool Edit(string id, Rating editedRating)
+        public async Task DeleteAsync(string id)
         {
-            if (id != editedRating.Name)
+            if (!AllSetup())
+                return;
+            var rating = await GetAsync(id);
+            if (rating != null)
             {
-                return false;
+                _context.Rating.Remove(rating);
             }
-            try
-            {
-                var ratToUpdate = Get(id);
-                ratToUpdate.Grade = editedRating.Grade;
-                ratToUpdate.Comment = editedRating.Comment;
-                _context.Update(ratToUpdate);
-                _context.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            await _context.SaveChangesAsync();
+        }
+
+        public void Edit(string id, Rating newInfoRating)
+        {
+            if (newInfoRating == null)
+                return;
+            /*newInfoRating.Date = Get(id).Date;*/
+            var oldRating = Get(id);
+            oldRating.Comment = newInfoRating.Comment;
+            oldRating.Grade = newInfoRating.Grade;
+            _context.Update(oldRating);
+            _context.SaveChanges();
+        }
+
+        public async Task EditAsync(string id, Rating newInfoRating)
+        {
+            if (newInfoRating == null)
+                return;
+            /*newInfoRating.Date = Get(id).Date;*/
+            var oldRating = await GetAsync(id);
+            oldRating.Comment = newInfoRating.Comment;
+            oldRating.Grade = newInfoRating.Grade;
+            _context.Update(oldRating);
+            await _context.SaveChangesAsync();
         }
 
         public Rating Get(string id)
         {
-            try
-            {
-                return _context.Rating.Single(rec => rec.Name == id);
-            }
-            catch
-            {
+            if (!AllSetup(id))
                 return null;
-            }
-
+            return _context.Rating.FirstOrDefault(m => m.Name == id);
+        }
+        //OK
+        public ICollection<Rating> GetAll()
+        {
+            return _context.Rating.ToList<Rating>();
+        }
+        //OK
+        public async Task<IEnumerable<Rating>> GetAllAsync()
+        {
+            return await _context.Rating.ToListAsync<Rating>();
         }
 
-        public List<Rating> GetAll()
+        public async Task<Rating> GetAsync(string id)
         {
-            if (_tmpDate == null || _context == null || _context.Rating == null)
-                return new List<Rating>();
-            return _context.Rating.ToList();
+            if (!AllSetup(id))
+                return null;
+            return await _context.Rating.FirstOrDefaultAsync(m => m.Name == id);
         }
 
         public double GetAverge()
@@ -76,45 +108,29 @@ namespace chat_app_server.Service
             throw new NotImplementedException();
         }
 
-        ICollection<Rating> IRatingService.GetAll()
+        public bool AllSetup(string id = "")
         {
-            if (_tmpDate == null)
-                return null;
-            return _context.Rating.ToList();
-        }
-
-        public Rating GetRatingByName(string Name)
-        {
-            if (_context == null || _context.Rating == null)
-                return null;
-            try
-            {
-                var result = _context.Rating.Single(r => r.Name == Name);
-                return result;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public async Task<IEnumerable<Rating>> GetAllAsync()
-        {
+            if (id == null)
+                return false;
+            if (_context == null)
+                return false;
             if (_context.Rating == null)
-                return null;
-            return await _context.Rating.ToListAsync();
+                return false;
+            return true;
         }
 
-        public async Task<Rating> GetAsync(string id)
+        public bool Exists(string id)
         {
-            if (id == null || _context == null || _context.Rating == null)
-                return null;
-            return await _context.Rating.FirstOrDefaultAsync(m => m.Name == id);
+            if (AllSetup(id))
+                return false;
+            return _context.Rating.Any(m => m.Name == id);
         }
 
-        public void Delete(string id)
+        public async Task<bool> ExistsAsync(string id)
         {
-            throw new NotImplementedException();
+            if (AllSetup(id))
+                return false;
+            return await _context.Rating.AnyAsync(m => m.Name == id);
         }
     }
 }
