@@ -121,14 +121,14 @@ namespace chat_app_server.Service
 
         public bool Exists(string id)
         {
-            if (AllSetup(id))
+            if (!AllSetup(id))
                 return false;
             return _context.Rating.Any(m => m.Name == id);
         }
 
         public async Task<bool> ExistsAsync(string id)
         {
-            if (AllSetup(id))
+            if (!AllSetup(id))
                 return false;
             return await _context.Rating.AnyAsync(m => m.Name == id);
         }

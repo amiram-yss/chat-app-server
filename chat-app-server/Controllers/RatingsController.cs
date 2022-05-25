@@ -28,7 +28,7 @@ namespace chat_app_server.Controllers
                 const int avgTextLen = 4;
                 int Total = 0;
                 int Counter = 0;
-                foreach (var i in _context.Rating)
+                foreach (var i in _service.GetAll())
                 {
                     Total++;
                     Counter += i.Grade;
@@ -46,7 +46,11 @@ namespace chat_app_server.Controllers
 
         public bool IsNameAvailable([Bind("Name,Grade,Comment")] Rating rating)
         {
-            if (_context.Rating == null)
+            //!
+            if (_service.Exists(rating.Name))
+                return false;
+            return true;
+            /*if (_context.Rating == null)
                 return true;
             try
             {
@@ -56,7 +60,7 @@ namespace chat_app_server.Controllers
             catch
             {
                 return true;
-            }
+            }*/
         }
 
         //OK!
