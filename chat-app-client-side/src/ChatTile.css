@@ -1,0 +1,90 @@
+.chat-tile-container {
+    border-radius: 5px;
+    position: relative;
+    width: 100%;
+    height: 1.8cm;
+    background-color: blanchedalmond;
+    flood-color: brown;
+    border-color: transparent;
+    color: black;
+    margin-left: 2px;
+}
+.chat-tile-container:hover {
+    background-color: bisque;
+    color:#303030;
+}
+.chat-tile-container:focus {
+    background-color: rgb(122, 147, 97);
+    outline: 1px;
+    box-shadow: none;
+    color: rgb(63, 46, 18);
+}
+.selected-tile{
+    background-color: rgb(142, 183, 169);
+}
+.selected-tile:hover{
+    background-color: rgb(108, 151, 137);
+}
+.time-text {
+    position: absolute;
+    float:right;
+    bottom: 0px;
+    right: 0px;
+    color: #303030;
+    padding-right: 5px;
+    font-weight: 100;
+    font-size: medium;
+}
+.prof-pic {
+    position: absolute;
+    min-height: 1.6cm;
+    min-width: 1.6cm;
+    max-width: 1.6cm;
+    max-height: 1.6cm;
+    left:.1cm;
+    top:.1cm;
+    border-radius: 50%;
+}
+.chat-title {
+    position: absolute;
+    left: 2cm;
+    top: 0px;
+    width: 5px;
+    font-weight: 640;
+    font-size: 24px;
+    text-overflow: ellipsis;
+}
+.last-message {
+    position: absolute;
+    color: black;
+    left: 2cm;
+    bottom: 6px;
+    font-size: 16px;
+    direction: ltr;
+    text-align: left;
+    width:calc(100% - 3.2cm);
+    text-overflow: ellipsis;
+    max-height: max-content;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.notification-bubble {
+    position: absolute;
+    float: right;
+    right: -7px;
+    top: 10px;
+    font-size: 7px;
+}
+.spacer {
+    min-height: 2px;
+    max-height: 2px;
+}
+.test {
+    background-color: black;
+}
+.right-col{
+    max-width: 0.5cm;
+}
+.left-col{
+    max-width: 1cm;
+}

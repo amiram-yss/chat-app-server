@@ -1,0 +1,43 @@
+.holder{
+    min-width: max-content;
+    overflow-x: hidden;
+    padding-right: 0px;
+    width:100%
+}
+.pic-col {
+    max-width: 2.6cm;
+}
+.self-prof-pic{
+    border-radius: 50%;
+    height: 1.8cm;
+    width: 1.8cm;
+    margin-top: 0.1cm;
+    margin-left: 0.1cm;
+}
+.name-col {
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+.btn-col {
+    min-width: min-content;
+    max-width: min-content;
+    margin-top: 2.5pt;
+    float:right;
+    padding-left: 2px;
+}
+.circ{
+    border-radius: 50%;
+}
+.name-holder {
+    min-width: 80%;
+    line-height: normal;
+    display: inline-block;
+    vertical-align: middle;
+    font-family: cursive;
+    font-weight: 550;
+    text-align: left;
+    width: 100%;
+    font-size: larger;
+    font-size: 30px;
+    margin-top: 10px;
+}

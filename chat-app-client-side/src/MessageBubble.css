@@ -1,0 +1,40 @@
+.message-sent {
+    background-color: lightgreen;
+    border-radius: 6px;
+    border-top-left-radius: 0px;
+    float: left;
+}
+.message-recieved {
+    background-color: lightgray;
+    border-radius: 6px;
+    border-top-right-radius: 0px;
+    float: right;
+}
+.message-bubble {
+    padding: 10px;
+    min-width: 220px;
+    max-width: 60%;
+    padding-right: 5px;
+    padding: 3px;
+    border-width: 0.5px;
+    margin: 5px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+.message-time {
+    position: relative;
+    float: right;
+    font-weight: 300;
+    font-size: medium;
+}
+.message-content {
+    max-width: max-content;
+    font-size: large;
+    float:left;
+    overflow: hidden;    
+    text-align: left;
+}
+.limitedSizedBubble {
+    max-height: 500px !important; 
+    max-width: 500px !important;
+}
