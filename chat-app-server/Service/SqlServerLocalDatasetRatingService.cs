@@ -132,5 +132,35 @@ namespace chat_app_server.Service
                 return false;
             return await _context.Rating.AnyAsync(m => m.Name == id);
         }
+
+        public IEnumerable<Rating> Query(string query)
+        {
+            if (!AllSetup())
+                return null;
+            var res = GetAll();
+            var filter = res.Where(x => {
+                if (x.Name.Contains(query))
+                    return true;
+                if (x.Comment == null)
+                    return false;
+                return x.Comment.Contains(query);
+            });
+            return filter;
+        }
+
+        public async Task<IEnumerable<Rating>> QueryAsync(string query)
+        {
+            if (!AllSetup())
+                return null;
+            var res = await GetAllAsync();
+            var filter = res.Where(x => {
+                if (x.Name.Contains(query))
+                    return true;
+                if (x.Comment == null)
+                    return false;
+                return x.Comment.Contains(query);
+            });
+            return filter;
+        }
     }
 }

@@ -20,5 +20,7 @@ namespace chat_app_server.Service
         public Task DeleteAsync(string id);
         public bool Exists (string id);
         public Task<bool> ExistsAsync(string id);
+        public IEnumerable<Rating> Query(string query);
+        public Task<IEnumerable<Rating>> QueryAsync(string query);
     }
 }
