@@ -33,6 +33,7 @@ namespace chat_app_server.Service
 
         public async Task CreateAsync(Rating rating)
         {
+            rating.Date = DateTime.Now;
             _context.Add(rating);
             await _context.SaveChangesAsync();
         }
@@ -52,9 +53,16 @@ namespace chat_app_server.Service
             throw new NotImplementedException();
         }
 
-        public Task EditAsync(string id, Rating rating)
+        public async Task EditAsync(string id, Rating newInfoRating)
         {
-            throw new NotImplementedException();
+            if (newInfoRating == null)
+                return;
+            /*newInfoRating.Date = Get(id).Date;*/
+            var oldRating = await GetAsync(id);
+            oldRating.Comment = newInfoRating.Comment;
+            oldRating.Grade = newInfoRating.Grade;
+            _context.Update(oldRating);
+            await _context.SaveChangesAsync();
         }
 
         public Rating Get(string id)
@@ -95,6 +103,20 @@ namespace chat_app_server.Service
             if (_context.Rating == null)
                 return false;
             return true;
+        }
+
+        public bool Exists(string id)
+        {
+            if (AllSetup(id))
+                return false;
+            return _context.Rating.Any(m => m.Name == id);
+        }
+
+        public async Task<bool> ExistsAsync(string id)
+        {
+            if (AllSetup(id))
+                return false;
+            return await _context.Rating.AnyAsync(m => m.Name == id);
         }
     }
 }

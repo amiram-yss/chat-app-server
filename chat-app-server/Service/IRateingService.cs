@@ -18,5 +18,7 @@ namespace chat_app_server.Service
         public Task EditAsync(string id, Rating rating);
         public void Delete(string id);
         public void DeleteAsync(string id);
+        public bool Exists (string id);
+        public Task<bool> ExistsAsync(string id);
     }
 }

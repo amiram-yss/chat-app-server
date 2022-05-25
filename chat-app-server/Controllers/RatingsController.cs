@@ -34,12 +34,12 @@ namespace chat_app_server.Controllers
                     Counter += i.Grade;
                 }
                 if (Counter == 0)
-                    return "0";
+                    return "No data available yet ;]";
                 double avg = (double)Counter / Total;
                 string str = avg.ToString();
                 if(str.Length >= avgTextLen)
                     str = str.Substring(0, avgTextLen);
-                return str;
+                return "Average: " + str;
             }
         }
         private static DateTime? _tmpDate = null;
@@ -86,6 +86,7 @@ namespace chat_app_server.Controllers
             return View();
         }
 
+        // OK!
         // POST: Ratings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -103,20 +104,23 @@ namespace chat_app_server.Controllers
             return View(rating);
         }
 
+        // OK!
         // GET: Ratings/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.Rating == null)
+            /*if (id == null || _context.Rating == null)
             {
                 return NotFound();
-            }
+            }*/
+            if (!_service.AllSetup(id))
+                return NotFound();
 
-            var rating = await _context.Rating.FindAsync(id);
+            var rating = await _service.GetAsync(id);//_context.Rating.FindAsync(id);
             if (rating == null)
             {
                 return NotFound();
             }
-            _tmpDate = rating.Date;
+            //_tmpDate = rating.Date;
             return View(rating);
         }
 
@@ -136,17 +140,16 @@ namespace chat_app_server.Controllers
             {
                 try
                 {
-                    if (_tmpDate != null)
+                    /*if (_tmpDate != null)
                     {
                         rating.Date = _tmpDate ?? default(DateTime);
                         _tmpDate = null;
-                    }
-                    _context.Update(rating);
-                    await _context.SaveChangesAsync();
+                    }*/
+                    await _service.EditAsync(id, rating);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RatingExists(rating.Name))
+                    if (!(await _service.ExistsAsync(id)))
                     {
                         return NotFound();
                     }
