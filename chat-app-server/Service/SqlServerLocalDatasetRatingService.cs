@@ -43,14 +43,28 @@ namespace chat_app_server.Service
             throw new NotImplementedException();
         }
 
-        public void DeleteAsync(string id)
+        public async Task DeleteAsync(string id)
         {
-            throw new NotImplementedException();
+            if (!AllSetup())
+                return;
+            var rating = await GetAsync(id);
+            if (rating != null)
+            {
+                _context.Rating.Remove(rating);
+            }
+            await _context.SaveChangesAsync();
         }
 
-        public void Edit(string id, Rating rating)
+        public void Edit(string id, Rating newInfoRating)
         {
-            throw new NotImplementedException();
+            if (newInfoRating == null)
+                return;
+            /*newInfoRating.Date = Get(id).Date;*/
+            var oldRating = Get(id);
+            oldRating.Comment = newInfoRating.Comment;
+            oldRating.Grade = newInfoRating.Grade;
+            _context.Update(oldRating);
+            _context.SaveChanges();
         }
 
         public async Task EditAsync(string id, Rating newInfoRating)

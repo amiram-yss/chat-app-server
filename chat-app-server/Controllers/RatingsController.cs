@@ -34,7 +34,7 @@ namespace chat_app_server.Controllers
                     Counter += i.Grade;
                 }
                 if (Counter == 0)
-                    return "No data available yet ;]";
+                    return "No data available yet ;-}";
                 double avg = (double)Counter / Total;
                 string str = avg.ToString();
                 if(str.Length >= avgTextLen)
@@ -112,18 +112,17 @@ namespace chat_app_server.Controllers
             {
                 return NotFound();
             }*/
-            if (!_service.AllSetup(id))
+/*  newer deletion          if (!_service.AllSetup(id))
                 return NotFound();
-
+*/
             var rating = await _service.GetAsync(id);//_context.Rating.FindAsync(id);
             if (rating == null)
-            {
                 return NotFound();
-            }
             //_tmpDate = rating.Date;
             return View(rating);
         }
 
+        // Maybe could use some adjustment...
         // POST: Ratings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -163,30 +162,25 @@ namespace chat_app_server.Controllers
             return View(rating);
         }
 
+        // OK!
         // GET: Ratings/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.Rating == null)
-            {
-                return NotFound();
-            }
-
-            var rating = await _context.Rating
-                .FirstOrDefaultAsync(m => m.Name == id);
+            var rating = await _service.GetAsync(id); //_context.Rating.FirstOrDefaultAsync(m => m.Name == id);
             if (rating == null)
             {
                 return NotFound();
             }
-
             return View(rating);
         }
 
+        // OK!
         // POST: Ratings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.Rating == null)
+            /*if (!_service.AllSetup())
             {
                 return Problem("Entity set 'chat_app_serverContext.Rating'  is null.");
             }
@@ -196,13 +190,9 @@ namespace chat_app_server.Controllers
                 _context.Rating.Remove(rating);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();*/
+            await _service.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool RatingExists(string id)
-        {
-            return (_context.Rating?.Any(e => e.Name == id)).GetValueOrDefault();
         }
     }
 }
