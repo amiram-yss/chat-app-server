@@ -97,7 +97,7 @@ namespace chat_app_server.Controllers
             {
                 /*_context.Add(rating);
                 await _context.SaveChangesAsync();*/
-                _service.Create(rating);
+                await _service.CreateAsync(rating);
                 return RedirectToAction(nameof(Index));
             }
             return View(rating);
