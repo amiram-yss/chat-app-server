@@ -10,7 +10,9 @@ using chat_app_server.Data;
 
 #pragma warning disable CS8603 // Possible null reference return.
 #pragma warning disable CS8604 // Possible null reference return.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 #pragma warning disable IDE0044 // Add readonly modifier
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
 
 namespace chat_app_server.Service
 {
@@ -24,12 +26,15 @@ namespace chat_app_server.Service
         }
         public void Create(Rating rating)
         {
-            throw new NotImplementedException();
+            rating.Date = DateTime.Now;
+            _context.Add(rating);
+            _context.SaveChanges();
         }
 
-        public Task CreateAsync(Rating rating)
+        public async Task CreateAsync(Rating rating)
         {
-            throw new NotImplementedException();
+            _context.Add(rating);
+            await _context.SaveChangesAsync();
         }
 
         public void Delete(string id)
@@ -54,7 +59,9 @@ namespace chat_app_server.Service
 
         public Rating Get(string id)
         {
-            throw new NotImplementedException();
+            if (!AllSetup(id))
+                return null;
+            return _context.Rating.FirstOrDefault(m => m.Name == id);
         }
         //OK
         public ICollection<Rating> GetAll()
@@ -67,9 +74,11 @@ namespace chat_app_server.Service
             return await _context.Rating.ToListAsync<Rating>();
         }
 
-        public Task<Rating> GetAsync(string id)
+        public async Task<Rating> GetAsync(string id)
         {
-            throw new NotImplementedException();
+            if (!AllSetup(id))
+                return null;
+            return await _context.Rating.FirstOrDefaultAsync(m => m.Name == id);
         }
 
         public double GetAverge()
@@ -77,9 +86,15 @@ namespace chat_app_server.Service
             throw new NotImplementedException();
         }
 
-        public bool AllSetup()
+        public bool AllSetup(string id = "")
         {
-            return (_context != null) && (_context.Rating != null);
+            if (id == null)
+                return false;
+            if (_context == null)
+                return false;
+            if (_context.Rating == null)
+                return false;
+            return true;
         }
     }
 }

@@ -21,10 +21,11 @@ namespace chat_app_server.Controllers
             _service = new SqlServerLocalDatasetRatingService(_context);
         }
 
-        private double Avg
+        private string Avg
         {
             get
             {
+                const int avgTextLen = 4;
                 int Total = 0;
                 int Counter = 0;
                 foreach (var i in _context.Rating)
@@ -33,9 +34,12 @@ namespace chat_app_server.Controllers
                     Counter += i.Grade;
                 }
                 if (Counter == 0)
-                    return 0;
+                    return "0";
                 double avg = (double)Counter / Total;
-                return avg;
+                string str = avg.ToString();
+                if(str.Length >= avgTextLen)
+                    str = str.Substring(0, avgTextLen);
+                return str;
             }
         }
         private static DateTime? _tmpDate = null;
@@ -55,6 +59,7 @@ namespace chat_app_server.Controllers
             }
         }
 
+        //OK!
         // GET: Ratings
         public async Task<IActionResult> Index()
         {
@@ -64,24 +69,17 @@ namespace chat_app_server.Controllers
             return View(await _service.GetAllAsync());
         }
 
+        //OK!
         // GET: Ratings/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.Rating == null)
-            {
+            var rating = await _service.GetAsync(id);
+            if(rating == null)
                 return NotFound();
-            }
-
-            var rating = await _context.Rating
-                .FirstOrDefaultAsync(m => m.Name == id);
-            if (rating == null)
-            {
-                return NotFound();
-            }
-
             return View(rating);
         }
 
+        //OK! not edited
         // GET: Ratings/Create
         public IActionResult Create()
         {
@@ -95,11 +93,11 @@ namespace chat_app_server.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Grade,Comment,Date")] Rating rating)
         {
-            rating.Date = DateTime.Now;
             if (ModelState.IsValid)
             {
-                _context.Add(rating);
-                await _context.SaveChangesAsync();
+                /*_context.Add(rating);
+                await _context.SaveChangesAsync();*/
+                _service.Create(rating);
                 return RedirectToAction(nameof(Index));
             }
             return View(rating);
