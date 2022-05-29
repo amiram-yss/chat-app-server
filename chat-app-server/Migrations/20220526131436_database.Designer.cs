@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using chat_app_server.Data;
 
@@ -11,9 +12,10 @@ using chat_app_server.Data;
 namespace chat_app_server.Migrations
 {
     [DbContext(typeof(chat_app_serverContext))]
-    partial class chat_app_serverContextModelSnapshot : ModelSnapshot
+    [Migration("20220526131436_database")]
+    partial class database
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,7 +41,7 @@ namespace chat_app_server.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Rating", (string)null);
+                    b.ToTable("Rating");
                 });
 #pragma warning restore 612, 618
         }
