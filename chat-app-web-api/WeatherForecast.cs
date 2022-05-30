@@ -1,4 +1,4 @@
-namespace ChatAppWebApi
+namespace chat_app_web_api
 {
     public class WeatherForecast
     {

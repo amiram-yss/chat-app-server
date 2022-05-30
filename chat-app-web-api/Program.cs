@@ -1,4 +1,12 @@
+const string cors_policy = "ChatAppCorsPolicy";
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+    options.AddPolicy(cors_policy, 
+    builder => 
+        builder.WithOrigins("*"))
+);
 
 // Add services to the container.
 
@@ -15,6 +23,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(cors_policy);
 
 app.UseAuthorization();
 

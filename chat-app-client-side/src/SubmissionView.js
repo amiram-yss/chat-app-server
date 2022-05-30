@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button, InputGroup, Form } from 'react-bootstrap'
 import AddNewContactPop from './AddNewContactPop';
 import User from './data stractures/User';
+import pars from './server info/Interpeter';
 
 
 
@@ -107,15 +108,20 @@ function SubmissionView(args) {
                         onChange={e =>
                             setText({ text: e.target.value })
                         }
-                        value= {Text.text}
+                        value={Text.text}
                     />
                 </Form>
             </div>
 
             <div className="col sendBtn">
                 <button className="littlrBtn items" onClick={() => {
-                    if (Text.text == '')
+                    if (Text.text == '') {
+                        //pars("{\"id\":\"alice\", \"name\":\"alicia\"}")
+                        let result = pars("http://localhost:5062/WeatherForecast")
+                        console.log(result)
                         return
+                    }
+
                     sendMessage()
                     args.onSubmitClick(Text.text)
                     args.REnder()
