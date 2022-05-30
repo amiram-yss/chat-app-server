@@ -21,11 +21,17 @@ namespace ChatAppWebApi.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+
+
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+                /*                Date = DateTime.Now.AddDays(index),
+                                TemperatureC = 333,*/
+                Name = "ariel",
+                nickName = "barmats",
+                LastMessage = "are you here?",
+
             })
             .ToArray();
         }
