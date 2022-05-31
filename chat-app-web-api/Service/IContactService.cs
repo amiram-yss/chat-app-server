@@ -49,6 +49,17 @@
         /// <param name="password">password</param>
         /// <returns>All friends for success, error 204 OW.</returns>
         public IEnumerable<Contact> Login(string username, string password);
+
+        /// <summary>
+        /// Checks that dataset is initialized.
+        /// </summary>
+        /// <returns>True if inited. False OW.</returns>
+        public bool IsInitialized();
+        /// <summary>
+        /// Checks if contact exists
+        /// </summary>
+        /// <returns>True if exists.</returns>
+        public bool ContactExists(string id);
         
     }
 }

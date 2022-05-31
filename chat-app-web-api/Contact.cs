@@ -13,5 +13,6 @@ namespace chat_app_web_api
         
         public string? last { get; set; }
         public DateTime? lastdate{ get; set; }
+        public string password { get;set; }
     }
 }

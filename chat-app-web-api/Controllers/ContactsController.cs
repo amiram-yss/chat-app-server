@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using chat_app_web_api;
 using chat_app_web_api.Data;
+using chat_app_web_api.Service;
 
 namespace chat_app_web_api.Controllers
 {
@@ -14,32 +15,29 @@ namespace chat_app_web_api.Controllers
     [Route("api")]
     public class ContactsController : Controller
     {
-        private readonly chat_app_web_apiContext _context;
+        //private readonly chat_app_web_apiContext _context;
+        private readonly WebApiDatabaseContactService _service;
 
         public ContactsController(chat_app_web_apiContext context)
         {
-            _context = context;
+            _service = new WebApiDatabaseContactService(context);
         }
 
         [HttpGet]
         [Route("contacts")]
         public IEnumerable<Contact> Get()
         {
-            if (_context.Contact == null)
-                return Enumerable.Empty<Contact>();
-            return _context.Contact;
+            return _service.GetAll();
         }
         [HttpGet]
         [Route("contacts/{id}")]
         public Contact? Get(string id)
         {
-            if (_context.Contact == null)
-                return null;
-            return _context.Contact.Find(id);
+            return _service.GetById(id);
         }
         private bool ContactExists(string id)
         {
-          return (_context.Contact?.Any(e => e.id == id)).GetValueOrDefault();
+            return _service.ContactExists(id);
         }
     }
 }
