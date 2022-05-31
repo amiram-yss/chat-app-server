@@ -42,6 +42,13 @@
         /// <param name="connectionJSON">Login info (id + password)</param>
         /// <returns>All friends for success, error 204 OW.</returns>
         public IEnumerable<Contact> Login(string connectionJSON);
+        /// <summary>
+        /// Gets contact id and password, and tries to login.
+        /// </summary>
+        /// <param name="username">Contact id (id + password)</param>
+        /// <param name="password">password</param>
+        /// <returns>All friends for success, error 204 OW.</returns>
+        public IEnumerable<Contact> Login(string username, string password);
         
     }
 }
