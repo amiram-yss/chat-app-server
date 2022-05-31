@@ -1,4 +1,7 @@
 import Message from './Message'
+import interpeter from '../server info/Interpeter.js'
+
+
 class Chat {
 
     constructor(users) {
@@ -7,6 +10,9 @@ class Chat {
     }
     sendMessage(message) {
         this.messages.push(message)
+        // interpeter("http://localhost:5062/api/transfer", "POST", ()=>{},
+        //  {from: message.addresser, to: message.addresser, content: message.content} )
+
     }
     getLastMessage() {
         return this.messages.at(-1)

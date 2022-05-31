@@ -87,11 +87,27 @@ class Server {
         }
     }
 
+    //irelevant after server...
     searchUser(name) {
+
         return this.userDB.has(name)
     }
 
     loggingIn(userName, password) {
+
+        
+        // let jdata = interpeter("http://localhost:5062/api/login", "GET", ()=>{},
+        //  null, false, userName ,password)
+        //  if(jdata != false) {
+        //      let u = new User(jdata.name, jdata.picture, jdata.server, jdata.nickName)
+        //      u.chats = jdata.chats
+        //      u.contacts = jdata.contacts
+        //      return u
+        //  }
+        //  else {
+        //      return null
+        //  }
+
         if (this.searchUser(userName) && this.loginDB.get(userName) === password) {
             return this.userDB.get(userName)
         }
@@ -102,16 +118,36 @@ class Server {
 
 
     BoolLoggingIn(userName, password) {
-        if (this.searchUser(userName) && this.loginDB.get(userName) === password) {
-            return true
-        }
-        else {
+        if(this.loggingIn(userName, password) == null) {
             return false
         }
+        else {
+            return true
+        }
+        // if (this.searchUser(userName) && this.loginDB.get(userName) === password) {
+        //     return true
+        // }
+        // else {
+        //     return false
+        // }
     }
 
 
     GetUserByName(userName){
+
+        // let jdata = interpeter("http://localhost:5062/api/search", "GET", ()=>{},
+        //  null, false, userName ,"")
+        //  if(jdata != false) {
+        //      let u = new User(jdata.name, jdata.picture, jdata.server, jdata.nickName)
+        //      u.chats = jdata.chats
+        //      u.contacts = jdata.contacts
+        //      return u
+        //  }
+        //  else {
+        //      return null
+        //  }
+
+
         if(this.searchUser(userName) ){
             return this.userDB.get(userName)
         }
