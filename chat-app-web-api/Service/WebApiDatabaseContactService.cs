@@ -66,9 +66,16 @@ namespace chat_app_web_api.Service
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Contact> Login(string username, string password)
+        public bool CanLogin(string username, string password)
         {
-            throw new NotImplementedException();
+            if (!IsInitialized())
+                return false;
+            var info = GetById(username);
+            if(info == null)
+                return false;
+            if (info.password != password)
+                return false;
+            return true;
         }
 
         public bool UpdateContact(Contact updatedContact)

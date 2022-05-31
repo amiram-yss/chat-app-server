@@ -48,7 +48,7 @@
         /// <param name="username">Contact id (id + password)</param>
         /// <param name="password">password</param>
         /// <returns>All friends for success, error 204 OW.</returns>
-        public IEnumerable<Contact> Login(string username, string password);
+        public bool CanLogin(string username, string password);
 
         /// <summary>
         /// Checks that dataset is initialized.
