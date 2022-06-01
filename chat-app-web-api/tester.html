@@ -8,16 +8,18 @@
             var token = ''
             function login() {
                 $.ajax({
-                    url:'http://localhost:5062/api/Login?username=amiyss&password=1',
+                    url:'http://localhost:5062/api/Login?username=ARIEL&password=123',
                     type: 'POST',
                     contentType: "application/json",
-                    error: function(){},
+                    error: function () { alert("no such!")},
                     success: function(data){token = data; alert(token)}
                 })
             }
             function get() {
                 $.ajax({
+                    /*url: 'http://localhost:5062/api/contacts',*/
                     url: 'http://localhost:5062/WeatherForecast',
+
                     type: 'GET',
                     beforeSend: function(xhr) {
                         alert(token)

@@ -5,22 +5,29 @@ import server from '../data stractures/Server';
 
 
 
-function httpGet(theUrl) {
-
+function httpGet(theUrl, mode, callback, data = null, async = true, userName = null, password = null) {
 
     const request = new XMLHttpRequest();
-    request.open("GET", theUrl);
-    request.send();
+    if(userName == null || password == null) {
+        request.open(mode, theUrl, async);
+    }
+   else {
+    request.open(mode, theUrl, async, userName, password);
+   }
+    request.send(data);
 
     request.onload = () => {
         console.log(request);
         if(request.status === 200){
-            console.log(JSON.parse(request.response));
+            //console.log(JSON.parse(request.response));
+            callback(JSON.parse(request.response))
+            //return request.response;
+        }else{
+            alert("not 200");
         }
     }
-    // fetch(theUrl)
-    // .then(res => res.json())
-    // .then(data => console.log(data))
-    return "aa"
+    if(!async) return JSON.parse(request.response)
+
+    return "async"
 }
 export default httpGet

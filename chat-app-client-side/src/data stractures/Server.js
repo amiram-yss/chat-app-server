@@ -1,4 +1,8 @@
 import users from '../server info/Users.js'
+import interpeter from '../server info/Interpeter.js'
+import postFun from '../server info/PostFun.js'
+
+
 import Message from './Message.js'
 import User from './User.js'
 
@@ -7,6 +11,7 @@ class Server {
     constructor() {
         this.loginDB = new Map()
         this.userDB = new Map()
+        this.requester = new postFun()
     }
 
     initialize() {
@@ -87,31 +92,86 @@ class Server {
         }
     }
 
+    //irelevant after server...
     searchUser(name) {
+
         return this.userDB.has(name)
     }
+    async fetchData() {
+        const res = await (await fetch("http://localhost:5062/WeatherForecast"));
+        const data = await res.json();
+        return (data);
+    }
 
-    loggingIn(userName, password) {
-        if (this.searchUser(userName) && this.loginDB.get(userName) === password) {
-            return this.userDB.get(userName)
-        }
-        else {
-            return null
-        }
+    updateTocken(tocken) {
+
+    }
+
+    async loggingIn(userName, password) {
+        console.log("logginng in")
+        //http://localhost:5062/api/Login?username=ARIEL&password=123
+        //http://localhost:5062/api/login
+        
+        this.requester.login(userName, password);
+         let jdata = this.requester.get("http://localhost:5062/WeatherForecast");
+
+        /*postFun("http://localhost:5062/api/login?username=" + userName + "&password=" + password, (data)=>{},
+          {userName: userName ,password: password}, false);*/
+        //let jdata = await this.fetchData()
+        console.log(this.requester.get("http://localhost:5062/WeatherForecast"))
+        /*let jdata = interpeter("http://localhost:5062/WeatherForecast", "GET", ()=>{},
+         null, false)*/
+
+         if(jdata != false) {
+             let u = new User(jdata.name, jdata.picture, jdata.server, jdata.nickName)
+             u.chats = jdata.chats
+             u.contacts = jdata.contacts
+             return u
+         }
+         else {
+             return null
+         }
+
+        // if (this.searchUser(userName) && this.loginDB.get(userName) === password) {
+        //     return this.userDB.get(userName)
+        // }
+        // else {
+        //     return null
+        // }
     }
 
 
     BoolLoggingIn(userName, password) {
-        if (this.searchUser(userName) && this.loginDB.get(userName) === password) {
-            return true
-        }
-        else {
+        if(this.loggingIn(userName, password) == null) {
             return false
         }
+        else {
+            return true
+        }
+        // if (this.searchUser(userName) && this.loginDB.get(userName) === password) {
+        //     return true
+        // }
+        // else {
+        //     return false
+        // }
     }
 
 
     GetUserByName(userName){
+
+        // let jdata = interpeter("http://localhost:5062/api/search", "GET", ()=>{},
+        //  null, false, userName ,"")
+        //  if(jdata != false) {
+        //      let u = new User(jdata.name, jdata.picture, jdata.server, jdata.nickName)
+        //      u.chats = jdata.chats
+        //      u.contacts = jdata.contacts
+        //      return u
+        //  }
+        //  else {
+        //      return null
+        //  }
+
+
         if(this.searchUser(userName) ){
             return this.userDB.get(userName)
         }

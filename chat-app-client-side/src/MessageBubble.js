@@ -13,7 +13,7 @@ import timeStringForComponents from './Time'
  * @returns 
  */
 function MessageBubble(args) {
-    console.log(args)
+    //console.log(args)
     const messageType = 'message-bubble ' + (args.addresser ? 'message-sent' : 'message-recieved')
     let messagecontent = (<span className='message-content'>{args.content}</span>)
     let mimeType = args.content.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)
