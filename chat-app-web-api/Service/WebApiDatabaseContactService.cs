@@ -35,7 +35,18 @@ namespace chat_app_web_api.Service
 
         public bool DeleteContact(string id)
         {
-            throw new NotImplementedException();
+            if (!ContactExists(id))
+                return false;
+            var connectorsRecordsToRemove = from cnt in _context.Contacts_Chats
+                             where cnt.contact.id == id
+                             select cnt.chat.id;
+            _context.Contact.Remove(GetById(id));
+            foreach (var connector in connectorsRecordsToRemove)
+            {
+                _context.Contacts_Chats.Remove(_context.Contacts_Chats.Where(x => connectorsRecordsToRemove.Contains(x.chat.id)).FirstOrDefault());
+            }
+            _context.SaveChanges();
+            return true;
         }
 
         public IEnumerable<Contact> GetAll()
@@ -81,9 +92,34 @@ namespace chat_app_web_api.Service
             return true;
         }
 
-        public bool UpdateContact(Contact updatedContact)
+        public bool UpdateContact(Contact updatedContact, string name, string server, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Contact.Where(_x => _x.id == updatedContact.id).FirstOrDefault().name = name;
+                _context.Contact.Where(_x => _x.id == updatedContact.id).FirstOrDefault().server = server;
+                _context.Contact.Where(_x => _x.id == updatedContact.id).FirstOrDefault().password = password;
+                _context.SaveChanges();
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public bool CreateContact(string id, string name, string server, string password)
+        {
+            try
+            {
+                _context.Contact.Add(new Contact()
+                {
+                    id = id,
+                    name = name,
+                    server = server,
+                    password = password
+                });
+                _context.SaveChanges();
+                return true;
+            }
+            catch { return false; }
         }
 
         IEnumerable<Contact> IContactService.GetById(string id)

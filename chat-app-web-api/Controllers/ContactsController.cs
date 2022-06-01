@@ -46,7 +46,6 @@ namespace chat_app_web_api.Controllers
 
         [HttpGet]
         [Route("allContacts")]
-        [Authorize]
         public IEnumerable<Contact> Get()
         {
             return _service.GetAll();
@@ -56,6 +55,28 @@ namespace chat_app_web_api.Controllers
         public Contact? Get(string id)
         {
             return _service.GetById(id);
+        }
+        [HttpDelete]
+        [Route("contacts/{id}")]
+        public IActionResult DeleteContact(string id)
+        {
+            if (!_service.DeleteContact(id))
+                return BadRequest();
+            return StatusCode(204);
+        }
+        [HttpPut]
+        [Route("contacts/{id}")]
+        public IActionResult UpdateOrCreateContact(string id, string name, string address, string password)
+        {
+            if (_service.ContactExists(id))
+            {
+                if(_service.UpdateContact(Get(id), name, address, password))
+                    return StatusCode(204);
+                return BadRequest();
+            }
+            if (_service.CreateContact(id, name, address, password))
+                return Created("","");
+            return BadRequest();
         }
         private bool ContactExists(string id)
         {

@@ -27,7 +27,7 @@
         /// </summary>
         /// <param name="updatedContact">Contac to update</param>
         /// <returns>True for</returns>
-        public bool UpdateContact(Contact updatedContact);
+        public bool UpdateContact(Contact updatedContact, string name, string server, string password);
 
         /// <summary>
         /// Deletes a contact with key == id.
@@ -60,6 +60,10 @@
         /// </summary>
         /// <returns>True if exists.</returns>
         public bool ContactExists(string id);
-        
+
+        public bool CreateContact(string id, string name, string server, string password);
+
+
+
     }
 }
