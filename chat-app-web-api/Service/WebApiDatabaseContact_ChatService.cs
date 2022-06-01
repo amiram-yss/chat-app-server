@@ -1,11 +1,15 @@
 ﻿using chat_app_web_api.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace chat_app_web_api.Service
+#pragma warning disable CS8601 // Possible null reference assignment.
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8603 // Possible null reference return.
 #pragma warning disable CS8604 // Possible null reference argument.
 
 {
+    [Authorize]
     public class WebApiDatabaseContact_ChatService : IContact_ChatService
     {
         chat_app_web_apiContext _context;
@@ -14,16 +18,52 @@ namespace chat_app_web_api.Service
             this._context = context;
         }
 
-        public IEnumerable<object> GetContacts(Contact contact)
+        public Contact GetContactById(string id)
         {
-            if(!IsInited())
-                yield return Enumerable.Empty<object>();
-            var validChats =    from record in _context.Contacts_Chats
-                                where record.contact.id == contact.id
-                                select record.chat.id;
-            var result =        from record in _context.Contacts_Chats
-                                where validChats.Contains(record.chat.id) && record.contact.name != contact.name
-                                select record.contact;
+            var res = _context.Contact.Where(x => x.id == id).FirstOrDefault();
+            if (res == default)
+                return null;
+            return res;
+        }
+
+        public bool AddContactToUser(Contact connectedContact, string contactId, string name, string server)
+        {
+            IsInited();
+            if (!Queries.CanAddContact(_context ,connectedContact, contactId, name, server))
+                return false;
+            int maxChatId = Queries.GetMaxIdInChatsContactConnector(_context.Contacts_Chats);
+            if (maxChatId < 0)
+                throw new Exception();
+            Chat newChat;
+            var tst = _context.Contacts_Chats.Where(x => x.id == maxChatId + 1);
+            if (tst.Count() == 0)
+                newChat = new Chat()
+                {
+                    name = "."
+                };
+            else
+                newChat = _context.Chat.Where(x => x.id == maxChatId + 1).FirstOrDefault();
+            _context.Chat.Add(newChat);
+            _context.SaveChanges();
+            _context.Contacts_Chats.Add(new Contacts_Chats()
+            {
+                chat = newChat,
+                contact = connectedContact
+            });
+            _context.Contacts_Chats.Add(new Contacts_Chats()
+            {
+                chat = newChat,
+                contact = _context.Contact.Where(x => x.id == contactId).FirstOrDefault()
+            });
+            _context.SaveChanges();
+
+            return true;
+        }
+
+        public IEnumerable<object> GetUserContacts(Contact contact)
+        {
+            IsInited();
+            var result = Queries.GetUserContacts(this._context, contact);
             foreach (var res_contact in result)
                 yield return new
                 {
@@ -35,17 +75,20 @@ namespace chat_app_web_api.Service
                 };
         }
 
-        public IEnumerable<object> GetContacts(string contactId)
+        public IEnumerable<object> GetUserContacts(string contactId)
         {
-            return GetContacts(_context.Contact.Where(c => c.id == contactId).FirstOrDefault());
+            return GetUserContacts(_context.Contact.Where(c => c.id == contactId).FirstOrDefault());
         }
 
-        private bool IsInited()
+        
+
+        private void IsInited()
         {
-            return _context != null &&
+            if (!(_context != null &&
                 _context.Contact != null &&
                 _context.Chat != null &&
-                _context.Contacts_Chats != null;
+                _context.Contacts_Chats != null))
+                throw new Exception("Dataset is not set properly.");
         }
     }
 }

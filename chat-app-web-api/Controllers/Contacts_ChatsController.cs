@@ -18,6 +18,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace chat_app_web_api.Controllers
 {
+    
     [ApiController]
     [Route("api")]
     public class Contacts_ChatsController : Controller
@@ -46,10 +47,19 @@ namespace chat_app_web_api.Controllers
         [Route("contacts")]
         public IActionResult GetContacts()
         {
-            var result = _service.GetContacts(this.GetConnectedContactId());
+            var result = _service.GetUserContacts(this.GetConnectedContactId());
             if (result == null)
                 return NotFound();
             return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("contacts")]
+        public IActionResult CreateChatWithContact(string contactId, string name, string server)
+        {
+            if (!_service.AddContactToUser(_service.GetContactById(GetConnectedContactId()), contactId, name, server))
+                return Conflict();
+            return Created("","");
         }
     }
 }
