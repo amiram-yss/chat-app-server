@@ -41,7 +41,8 @@ namespace chat_app_web_api.Controllers
         [Route("contacts/{id}/messages")]
         public IEnumerable<Message> GetMessagesWith(string id)
         {
-            return _service.GetMessagesWith(GetConnectedContactId(), id);
+            throw new NotImplementedException();
+            //return _service.GetMessagesWith(GetConnectedContactId(), id);
         }
     }
 }
