@@ -9,6 +9,12 @@ using chat_app_web_api;
 using chat_app_web_api.Data;
 using Microsoft.AspNetCore.Authorization;
 using chat_app_web_api.Service;
+using Microsoft.AspNetCore.Authentication;
+using System.IdentityModel.Tokens.Jwt;
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8603 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Dereference of a possibly null reference.
 
 namespace chat_app_web_api.Controllers
 {
@@ -16,6 +22,16 @@ namespace chat_app_web_api.Controllers
     [Route("api")]
     public class Contacts_ChatsController : Controller
     {
+        private string GetConnectedContactId()
+        {
+            var token = this.HttpContext.GetTokenAsync("access_token");
+            if (token == null)
+                return null;
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(token.Result);
+            return User.Claims.FirstOrDefault
+                (c => c.Type.Equals("UserId", StringComparison.OrdinalIgnoreCase)).Value;
+        }
 
         public IContact_ChatService _service;
         public IConfiguration _configuration;
@@ -27,12 +43,13 @@ namespace chat_app_web_api.Controllers
         }
 
         [HttpGet]
-        [Route("contact")]
+        [Route("contacts")]
         public IActionResult GetContacts()
         {
-            var shit = _configuration.GetValue("UserId", "");
-            _service.GetContacts(shit);
-            return Ok();
+            var result = _service.GetContacts(this.GetConnectedContactId());
+            if (result == null)
+                return NotFound();
+            return Ok(result);
         }
     }
 }

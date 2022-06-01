@@ -14,21 +14,28 @@ namespace chat_app_web_api.Service
             this._context = context;
         }
 
-        public IEnumerable<Contact> GetContacts(Contact contact)
+        public IEnumerable<object> GetContacts(Contact contact)
         {
             if(!IsInited())
-                return Enumerable.Empty<Contact>();
+                yield return Enumerable.Empty<object>();
             var validChats =    from record in _context.Contacts_Chats
                                 where record.contact.id == contact.id
-                                select record;
-
-            var result =        from record in validChats
-                                where record.contact.id != contact.id
+                                select record.chat.id;
+            var result =        from record in _context.Contacts_Chats
+                                where validChats.Contains(record.chat.id) && record.contact.name != contact.name
                                 select record.contact;
-            return result;
+            foreach (var res_contact in result)
+                yield return new
+                {
+                    id = res_contact.id,
+                    name = res_contact.name,
+                    server = res_contact.server,
+                    last = res_contact.last,
+                    lastdate = res_contact.lastdate
+                };
         }
 
-        public IEnumerable<Contact> GetContacts(string contactId)
+        public IEnumerable<object> GetContacts(string contactId)
         {
             return GetContacts(_context.Contact.Where(c => c.id == contactId).FirstOrDefault());
         }
