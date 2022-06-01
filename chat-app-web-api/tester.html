@@ -1,0 +1,37 @@
+<html>
+    <body>
+        <button onclick="login()">Login</button>
+        <button onclick="get()">Get</button>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script>
+            var token = ''
+            function login() {
+                $.ajax({
+                    url:'http://localhost:5062/api/Login?username=amiyss&password=1',
+                    type: 'POST',
+                    contentType: "application/json",
+                    error: function(){},
+                    success: function(data){token = data; alert(token)}
+                })
+            }
+            function get() {
+                $.ajax({
+                    url: 'http://localhost:5062/WeatherForecast',
+                    type: 'GET',
+                    beforeSend: function(xhr) {
+                        alert(token)
+                        xhr.setRequestHeader("Authorization", 'Bearer ' + token)
+                    },
+                    data: {},
+                    success: function(data) {
+                        alert(data)
+                    },
+                    error: function() {
+                        alert("shit then..")
+                    }
+                })
+            }
+        </script>
+    </body>
+</html>

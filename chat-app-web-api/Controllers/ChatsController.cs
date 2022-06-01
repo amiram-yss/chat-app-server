@@ -10,7 +10,7 @@ using chat_app_web_api.Data;
 
 namespace chat_app_web_api.Controllers
 {
-    public class ChatsController : Controller
+    public class ChatsController : ControllerBase
     {
         private readonly chat_app_web_apiContext _context;
 
