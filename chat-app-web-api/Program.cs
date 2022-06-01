@@ -4,6 +4,7 @@ using chat_app_web_api.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 const string cors_policy = "ChatAppCorsPolicy";
 
@@ -12,9 +13,12 @@ builder.Services.AddDbContext<chat_app_web_apiContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("chat_app_web_apiContext") ?? throw new InvalidOperationException("Connection string 'chat_app_web_apiContext' not found.")));
 
 builder.Services.AddCors(options =>
-    options.AddPolicy(cors_policy, 
-    builder => 
-        builder.WithOrigins("*"))
+    options.AddPolicy(cors_policy,
+    builder =>
+        builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        )
 );
 
 // Add services to the container.
@@ -22,7 +26,30 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(x =>
+{
+    x.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization enabler",
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+    });
+    x.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = "bearer",
+                    Type = ReferenceType.SecurityScheme
+                }
+            },
+            new List<string>()
+        }
+    });
+});
 
 //inserted code
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -38,6 +65,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTParams:SecretKey"]))
     };
 });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -50,9 +78,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(cors_policy);
 
-app.UseAuthorization();
 
 app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

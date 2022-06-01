@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace chat_app_web_api.Controllers
@@ -17,13 +18,10 @@ namespace chat_app_web_api.Controllers
         {
             _logger = logger;
         }
-
+        [Authorize]
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-
-
-
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 /*                Date = DateTime.Now.AddDays(index),

@@ -7,22 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using chat_app_web_api;
 using chat_app_web_api.Data;
+using Microsoft.AspNetCore.Authorization;
+using chat_app_web_api.Service;
 
 namespace chat_app_web_api.Controllers
 {
+    [ApiController]
+    [Route("api")]
     public class Contacts_ChatsController : Controller
     {
-        private readonly chat_app_web_apiContext _context;
 
-        public Contacts_ChatsController(chat_app_web_apiContext context)
+        public IContact_ChatService _service;
+        public IConfiguration _configuration;
+
+        public Contacts_ChatsController(chat_app_web_apiContext context, IConfiguration config)
         {
-            _context = context;
+            _service = new WebApiDatabaseContact_ChatService(context);
+            _configuration = config;
         }
 
-        
-        private bool Contacts_ChatsExists(int id)
+        [HttpGet]
+        [Route("contact")]
+        public IActionResult GetContacts()
         {
-          return (_context.Contacts_Chats?.Any(e => e.id == id)).GetValueOrDefault();
+            var shit = _configuration.GetValue("UserId", "");
+            _service.GetContacts(shit);
+            return Ok();
         }
     }
 }

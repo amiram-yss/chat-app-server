@@ -12,12 +12,13 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace chat_app_web_api.Controllers
 {
     [ApiController]
     [Route("api")]
-    public class ContactsController : Controller
+    public class ContactsController : ControllerBase
     {
         //private readonly chat_app_web_apiContext _context;
         private readonly WebApiDatabaseContactService _service;
@@ -26,11 +27,12 @@ namespace chat_app_web_api.Controllers
         public ContactsController(chat_app_web_apiContext context, IConfiguration config)
         {
             _configuration = config;
-            _service = new WebApiDatabaseContactService(context);
+            _service = new WebApiDatabaseContactService(context, config);
         }
 
         [HttpGet]
         [Route("contacts")]
+        [Authorize]
         public IEnumerable<Contact> Get()
         {
             return _service.GetAll();

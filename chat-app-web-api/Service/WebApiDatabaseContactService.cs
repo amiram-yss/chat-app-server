@@ -1,4 +1,5 @@
 ﻿using chat_app_web_api.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace chat_app_web_api.Service
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
@@ -9,10 +10,12 @@ namespace chat_app_web_api.Service
     public class WebApiDatabaseContactService : IContactService
     {
         chat_app_web_apiContext _context;
-        public WebApiDatabaseContactService(chat_app_web_apiContext context)
+
+        public WebApiDatabaseContactService(chat_app_web_apiContext context, IConfiguration configuration)
         {
             this._context = context;
         }
+
         public bool AddContact(Contact updatedContact)
         {
             if (!IsInitialized())
