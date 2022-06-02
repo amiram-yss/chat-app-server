@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Button, InputGroup, Form } from 'react-bootstrap'
 import AddNewContactPop from './AddNewContactPop';
 import User from './data stractures/User';
-import interpeter from './server info/Interpeter';
 
 
 
@@ -108,38 +107,15 @@ function SubmissionView(args) {
                         onChange={e =>
                             setText({ text: e.target.value })
                         }
-                        value={Text.text}
+                        value= {Text.text}
                     />
                 </Form>
             </div>
 
             <div className="col sendBtn">
                 <button className="littlrBtn items" onClick={() => {
-                    if (Text.text == '') {
-                        //pars("{\"id\":\"alice\", \"name\":\"alicia\"}")
-                        //"http://localhost:5062/api/contacts/"
-                        //"http://localhost:5062/WeatherForecast"
-                        
-                        // interpeter("http://localhost:5062/WeatherForecast", "GET", (data) => {
-                        //     console.log(data)
-                        // })
-
-                        interpeter("http://localhost:5062/api/Login?username=ARIEL&password=123",
-                                   "POST", (data) => {
-                            console.log(data)
-                        })
-
-                    // url:'http://localhost:5062/api/Login?username=ARIEL&password=123',
-                    // type: 'POST',
-                    // contentType: "application/json",
-                    // error: function () { alert("no such!")},
-                    // success: function(data){token = data; alert(token)}
-
-
-
+                    if (Text.text == '')
                         return
-                    }
-
                     sendMessage()
                     args.onSubmitClick(Text.text)
                     args.REnder()

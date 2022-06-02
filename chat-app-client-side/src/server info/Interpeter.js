@@ -22,8 +22,6 @@ function httpGet(theUrl, mode, callback, data = null, async = true, userName = n
             //console.log(JSON.parse(request.response));
             callback(JSON.parse(request.response))
             //return request.response;
-        }else{
-            alert("not 200");
         }
     }
     if(!async) return JSON.parse(request.response)
