@@ -13,9 +13,6 @@ function ChatList(args) {// args.User, args.changeActiveChat
         }
         return -1})
 
-    //
-
-    
     var usersList = args.User.chats.map(chat => {
         let users = chat.users
         let pic = ""

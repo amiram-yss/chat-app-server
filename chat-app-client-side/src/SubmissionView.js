@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Button, InputGroup, Form } from 'react-bootstrap'
 import AddNewContactPop from './AddNewContactPop';
 import User from './data stractures/User';
-import interpeter from './server info/Interpeter';
 
 
 
@@ -35,7 +34,7 @@ function SubmissionView(args) {
             newMessage.addressee = args.chat
             newMessage.type = "txt"
             args.chat.sendMessage(newMessage)
-            //console.info(args.chat)
+            console.info(args.chat)
         }
         else {
             alert("please select chat")
@@ -108,25 +107,15 @@ function SubmissionView(args) {
                         onChange={e =>
                             setText({ text: e.target.value })
                         }
-                        value={Text.text}
+                        value= {Text.text}
                     />
                 </Form>
             </div>
 
             <div className="col sendBtn">
                 <button className="littlrBtn items" onClick={() => {
-                    if (Text.text == '') {
-                        //pars("{\"id\":\"alice\", \"name\":\"alicia\"}")
-                        //"http://localhost:5062/api/contacts/"
-                        //"http://localhost:5062/WeatherForecast"
-                        
-                        interpeter("http://localhost:5062/api/contacts", "GET", (data) => {
-                            console.log(data)
-                        })
-
+                    if (Text.text == '')
                         return
-                    }
-
                     sendMessage()
                     args.onSubmitClick(Text.text)
                     args.REnder()
