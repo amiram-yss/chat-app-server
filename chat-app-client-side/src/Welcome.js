@@ -6,8 +6,6 @@ import Wrong from './Wrong';
 import LoginForm from './LoginForm';
 import RegistrationForm from './RegistrationForm';
 import './server info/Users';
-import parse from './server info/Interpeter';
-
 
 import React from 'react';
 
@@ -36,8 +34,6 @@ function Welcome({ Login, Registration }) {
                         <h1 className="my-5 display-5 fw-bold ls-tight welcomeText">
                             Welcome to the inner WhatsApp of   <br />
                             <span className="bikiniText display-3 fw-bold">Bikini Bottom</span>
-                            <br /><br />
-                            <h3 className="rateLine">click <a href='http://localhost:5122/'>here</a> to rate the app</h3>
                         </h1>
                     </div>
 

@@ -13,7 +13,7 @@ function SubmissionView(args) {
 
     const randomName = () => {
         if (args.chat == "") {
-            //console.log("here")
+            console.log("here")
             alert("please select chat")
             document.getElementById("ChatList").click()
         }
@@ -34,7 +34,7 @@ function SubmissionView(args) {
             newMessage.addressee = args.chat
             newMessage.type = "txt"
             args.chat.sendMessage(newMessage)
-            //console.info(args.chat)
+            console.info(args.chat)
         }
         else {
             alert("please select chat")

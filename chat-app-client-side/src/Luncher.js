@@ -65,7 +65,7 @@ function Luncher() {
   }
 
   const Registration = details => {
-    //console.log(details);
+    console.log(details);
     let nickName = details.nickName
     if(nickName == "") {
       nickName = details.name

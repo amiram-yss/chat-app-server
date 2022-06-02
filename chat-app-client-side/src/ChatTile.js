@@ -13,7 +13,7 @@ import './ChatTile.css'
  * @returns 
  */
 function ChatTile(args) {
-    //console.log("args: ", args)
+    console.log("args: ", args)
     var cName = "chat-tile-container " + (args.isSelected ? "selected-tile":"")
     return (
         <div>
