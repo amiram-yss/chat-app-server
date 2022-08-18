@@ -64,5 +64,10 @@ namespace chat_app_web_api.Service
                 return null;
             }*/
         }
+
+        IEnumerable<Message> IMessagesService.GetMeesagesWith(string myId, string otherId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
